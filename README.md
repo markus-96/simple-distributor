@@ -4,6 +4,7 @@ It also provides an option to set every message beeing sent to a certain mailadr
 to status 'hold'
 
 **be carefull! This is still an early Alpha-state!!!**
+It is only 12 hours old and has not been tested yet!
 
 For configuration, use phpmyadmin.
 
@@ -12,7 +13,7 @@ If you want that every mail to a certain mailadress has to be released by the ad
 simply add it to the hold table!
 
 If you want the sender to be notified that the mail is set to status "hold", add the
-mailadress to sendbounce!
+mailadress to the function sendbounce in hold_bounce.sh!
 
 ## Prerequisites
 You must have a functional mailserver with the database model provided by[Thomas Leister](https://github.com/ThomasLeister) 
@@ -67,3 +68,6 @@ If you do not want to wait, you can flush the queue:
 ```bash
 sudo postqueue -f
 ```
+
+## Only put them hold without notification and log
+Proceed from step [The table 'hold'](#the-table-hold), don't use sripts!
