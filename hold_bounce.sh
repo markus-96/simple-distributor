@@ -27,6 +27,8 @@ while inotifywait -e modify $LOG; do
     ##
     MAILTEXT=$(echo -e "Dies ist eine automaitisch generierete Mail.\n\nSie haben eine Mail an $RECIPIENT geschrieben. Es handelt sich hierbei um einen Mailverteiler.\nDie Mail hat folgende ID: $NEWID und muss vom Administrator freigegeben werden, nachdem die Mail gesichtet wurde.\n\nFreundliche Grüße")
     SUBJECT=$(echo "[ T39 ] E-Mail an $RECIPIENT muss freigegeben werden!")
+    #hier muss das noch anhand der Datenbank abgefragt werden. Dann ist das
+    #wesentlich eleganter.
 	sendbounce () {
         RECIPIENT=$1
    
