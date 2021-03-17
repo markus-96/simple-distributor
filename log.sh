@@ -15,6 +15,7 @@ if [ -f $LOG ]; then
         touch $LOG
         echo start >> $LOG
         echo "New Logfile created"
+fi
 
 #
 #   Es wird alle 5 Sekunden geprüft, ob neue Mails im Status "hold" sind.
