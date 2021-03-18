@@ -1,7 +1,7 @@
 #!/bin/bash
 LOG=/run/user/$(id -u $USER)/hold_bounce.log
 
-#   COUNT1 ist die aktuellste Zeile in mailq. Das anschließende "echo ist 
+#   COUNT ist die aktuellste Zeile in mailq. Das anschließende "echo ist 
 #   notwendig, da ansonsten die Formatierung anders ist als in der Logdatei.
 COUNT=$(mailq |  grep "^[A-F0-9]" | grep -I "\!" | sort -k5n -k6 | tail -n 1)
 COUNT=$(echo $COUNT)
@@ -28,11 +28,6 @@ if [ "$num" -eq 1 ]; then
         OLD=$var
 fi
 
-
-
-#!!!!!!!!!!
-#!!!!!!!!!! hier muss noch anhand der Uhrzeit gecheckt werden, ob nicht einfach eine released wurde. Dann sollte das funzen!
-#!!!!!!!!!!
 if [ "$OLD" != "$COUNT" ]; then
     old_date1=$(echo $OLD | awk '{ print $3,$4,$5,$6 }')
     old_date=$(date -d "$old_date1" +%Y%m%d%H%M%S)
@@ -41,5 +36,8 @@ if [ "$OLD" != "$COUNT" ]; then
     if [ "$old_date" -gt "$count_date" ]
         echo $COUNT >> $LOG
         echo ich bin böse
+        elif [ "$num" -eq 1 ]; then
+            echo $COUNT >> $LOG
+            echo ich bin böse
     fi
 fi
