@@ -29,7 +29,10 @@ if [ "$num" -eq 1 ]; then
 fi
 
 
-#hier muss noch anhand der Uhrzeit gecheckt werden, ob nicht einfach eine released wurde. Dann sollte das funzen!
+
+#!!!!!!!!!!
+#!!!!!!!!!! hier muss noch anhand der Uhrzeit gecheckt werden, ob nicht einfach eine released wurde. Dann sollte das funzen!
+#!!!!!!!!!!
 if [ "$OLD" != "$COUNT" ]; then
     echo $COUNT >> $LOG
     echo ich bin böse

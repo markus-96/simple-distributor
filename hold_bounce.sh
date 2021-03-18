@@ -8,11 +8,27 @@ LOG=/run/user/$(id -u $USER)/hold_bounce.log
 sh log.sh &
 sleep 5;
 
+#
+#   Hier muss vmaildbpass entsprechend eurem Passwort für den Datenbankbenutzer
+#   vmail angepasst werden:
+#
+user=$(echo vmail)
+password=$(echo vmaildbpass)
+hosts=$(echo "unix:/run/mysqld/mysqld.sock")
+dbname=$(echo vmail)
+query=$(echo "select distinct concat(destination_username, '@', destination_domain) as PROTECTED from hold where hold = true")
+
 while inotifywait -e modify $LOG; do
 
     #   Verändert sich was im Log, wird folgendes ausgeführt:
     NEWENTRY=$(tail -n 1 $LOG)
     NEWID=$(echo $NEWENTRY | awk '{ print $1 }')
+    
+    #!!!!!!!!!!
+    #!!!!!!!!!! Die Variable SENDER funktioniert noch nicht zuverlässig! Die muss man wohl
+    #!!!!!!!!!! aus dem postfix-log extrahieren
+    #!!!!!!!!!! 
+    
     SENDER=$(echo $NEWENTRY | awk '{ print $7 }')
     
     #   In mailq steht der Empfänger in der Zeile unter der ID. RECIPIENT1 und 
@@ -27,24 +43,15 @@ while inotifywait -e modify $LOG; do
     ##
     MAILTEXT=$(echo -e "Dies ist eine automaitisch generierete Mail.\n\nSie haben eine Mail an $RECIPIENT geschrieben. Es handelt sich hierbei um einen Mailverteiler.\nDie Mail hat folgende ID: $NEWID und muss vom Administrator freigegeben werden, nachdem die Mail gesichtet wurde.\n\nFreundliche Grüße")
     SUBJECT=$(echo "[ T39 ] E-Mail an $RECIPIENT muss freigegeben werden!")
-    #hier muss das noch anhand der Datenbank abgefragt werden. Dann ist das
-    #wesentlich eleganter.
-	sendbounce () {
-        RECIPIENT=$1
-   
-        case $RECIPIENT in
-        username1@domain.net)
+    #   die Datenbankabfrage, die alle durch die Tabelle hold geschützten 
+    #   Adressen ausgibt, wird an die "while"-Funktion weitergeleitet.
+    #   Stimmt die Adresse der angekommenden Mail mit einer geschützten Adresse
+    #   überein, wird eine Bounce-Mail versendet!
+    echo $query | mysql -u$user -p$password -D$dbname |
+    while IFS='\n' read PROTECTED; do
+        if [ "$PROTECTED" = "$RECIPIENT" ]
             echo $MAILTEXT | mail -s $SUBJECT $SENDER
-            ;;
-        username2@domain.net)
-            echo $MAILTEXT | mail -s $SUBJECT $SENDER
-            ;;
-        username3@domain.net)
-            echo $MAILTEXT | mail -s $SUBJECT $SENDER
-            ;;
-        esac
-        echo sollte geklappt haben
-    }   
-    sendbounce $RECIPIENT
+        fi
+    done
 	echo sendbpunce 
 done
