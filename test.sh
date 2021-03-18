@@ -34,6 +34,12 @@ fi
 #!!!!!!!!!! hier muss noch anhand der Uhrzeit gecheckt werden, ob nicht einfach eine released wurde. Dann sollte das funzen!
 #!!!!!!!!!!
 if [ "$OLD" != "$COUNT" ]; then
-    echo $COUNT >> $LOG
-    echo ich bin böse
+    old_date1=$(echo $OLD | awk '{ print $3,$4,$5,$6 }')
+    old_date=$(date -d "$old_date1" +%Y%m%d%H%M%S)
+    count_date1=$(echo $COUNT | awk '{ print $3,$4,$5,$6 }')
+    count_date=$(date -d "$count_date1" +%Y%m%d%H%M%S)
+    if [ "$old_date" -gt "$count_date" ]
+        echo $COUNT >> $LOG
+        echo ich bin böse
+    fi
 fi
