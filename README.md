@@ -3,8 +3,8 @@ This is a simple bounce-generator for messages beeing set to status "hold" by po
 It also provides an option to set every message beeing sent to a certain mailadress
 to status 'hold'
 
-**be carefull! This is still an early Alpha-state!!!**
-It is only 12 hours old and has not been tested yet!
+**be carefull! This is still an Alpha-state!!!**
+The Bounce-Mail sometimes still gets send to the wrong address.
 
 For configuration, use phpmyadmin.
 
@@ -26,8 +26,9 @@ Since the script uses inotifywait, you have to install it first:
 sudo apt install inotify-tools
 ```
 ### The scripts
-Put them anywhere you want, but they have to be in the same directory! Than, add a
-autostart-option.
+Put them anywhere you want, for example in /etc/postfix/sql, but they have to be in the same directory! Than, add a
+autostart-option. You have to write the vmail-databaseuser-password into the hold_bounce.sh-file.
+Because of that, you have to protect it somehow, for example change the user and usergroup of the file to root:vmail and change read-write permissions to 440.
 
 ### The table 'hold'
 Simply add the table ```hold.sql``` to the database ```vmail```. It is a simple dump made
@@ -35,11 +36,13 @@ by phpmyadmin.
 
 ### Modifications to 'main.cf'
 The table has do readable by postfix. For this, edit the file ```main.cf``` to look like this:
+
 near smtpd_recipient_restrictions:
 ```bash
 smtpd_recipient_restrictions =  check_recipient_access proxy:mysql:/etc/postfix/sql/hold-access.cf
                                 check_recipient_access proxy:mysql:/etc/postfix/sql/recipient-access.cf
 ```
+
 near proxy_read_maps:
 ```bash
 proxy_read_maps =       proxy:mysql:/etc/postfix/sql/aliases.cf
