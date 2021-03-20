@@ -33,7 +33,7 @@ if [ "$OLD" != "$COUNT" ]; then
     old_date=$(date -d "$old_date1" +%Y%m%d%H%M%S)
     count_date1=$(echo $COUNT | awk '{ print $3,$4,$5,$6 }')
     count_date=$(date -d "$count_date1" +%Y%m%d%H%M%S)
-    if [ "$old_date" -gt "$count_date" ]
+    if [ "$old_date" -lt "$count_date" ]
         echo $COUNT >> $LOG
         echo ich bin böse
         elif [ "$num" -eq 1 ]; then

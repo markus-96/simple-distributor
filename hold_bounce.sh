@@ -25,8 +25,8 @@ while inotifywait -e modify $LOG; do
     NEWID=$(echo $NEWENTRY | awk '{ print $1 }')
     
     #!!!!!!!!!!
-    #!!!!!!!!!! Die Variable SENDER funktioniert noch nicht zuverlässig! Die muss man wohl
-    #!!!!!!!!!! aus dem postfix-log extrahieren
+    #!!!!!!!!!! Die Variable SENDER funktioniert noch nicht zuverlässig! Die 
+    #!!!!!!!!!! muss man wohl aus dem postfix-log extrahieren oder so...
     #!!!!!!!!!! 
     
     SENDER=$(echo $NEWENTRY | awk '{ print $7 }')
